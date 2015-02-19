@@ -1,0 +1,182 @@
+body {
+  font-family: Tahoma, Geneva, sans-serif;
+}
+
+#info-bar {
+  width: 100%;
+  background-color: #2E8B57;
+  color: #ffffff;
+  font-size: 1.5em;
+  text-align: left;
+  padding: 5px;
+  margin-bottom: 10px;
+}
+
+#cal-view-title {
+  width: 100%;
+  background-color: #2E8B57;
+  color: #ffffff;
+  font-size: 1.5em;
+  text-align: center;
+  padding: 5px;
+}
+
+#nav-links {
+  width: auto;
+}
+
+#app-title {
+  width: auto;
+}
+
+#logout {
+  float: right;
+  width: auto;
+}
+
+#table-title {
+  font-style: bold;
+  font-size: 2em;
+}
+
+.show-list {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  margin-left: 5px;
+}
+
+.show-list td, .show-list th {
+  font-size: 1em;
+  border: 1px solid #2E8B57;
+  padding: 3px 7px 2px 7px;
+}
+
+.show-list th {
+  font-size: 1.1em;
+  text-align: left;
+  padding-top: 5px;
+  padding-bottom: 4px;
+  background-color: #2E8B57;
+  color: #ffffff;
+}
+
+.show-list th.button, .show-list td.button {
+  width: 1px;
+}
+
+.show-list tr.alt td {
+  color: #000000;
+  background-color: #C1FFC1;
+}
+
+/* Calendar view */
+.cal-view {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.cal-view td, .cal-view th {
+  font-size: 1em;
+  border: 1px solid #2E8B57;
+  padding: 3px 7px 2px 7px;
+}
+
+.cal-view th {
+  font-size: 1.1em;
+  text-align: left;
+  padding-top: 5px;
+  padding-bottom: 4px;
+  background-color: #2E8B57;
+  color: #ffffff;
+}
+
+.cal-view tr.alt td {
+  color: #000000;
+  background-color: #C1FFC1;
+}
+
+a.user:link {
+  color: #ffffff;
+}
+
+a.nav:link, a.nav:visited {
+  color: #ffffff;
+  text-decoration: none;
+  padding-left: 10px;
+}
+
+a.create:link, a.create:visited {
+  display: block;
+  width: 200px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: #2E8B57;
+  text-align: center;
+  padding: 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+a.action:link, a.action:visited {
+  display: block;
+  width: 60px;
+  font-size: .7em;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: #2E8B57;
+  text-align: center;
+  padding: 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  float: right;
+}
+
+a.add:link, a.add:visited {
+  display: block;
+  width: auto;
+  font-size: .7em;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: #2E8B57;
+  text-align: center;
+  padding: 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+  float: left;
+}
+
+#content {
+  float: left;
+  width: 750px;
+  margin:0 auto;
+}
+
+#event-details {
+  float: left;
+  width: auto;
+  text-align: left;
+}
+
+#calendar-sidebar {
+  display: inline;
+  float: right;
+  width: auto;
+  text-align: left;
+  border: 1px solid;
+  margin-top: 20px;
+  margin-right: 5px;
+  padding-right: 10px;
+}
+
+.debug-dump {
+  clear: both;
+  float: left;
+  width: 100%;
+  margin-top: 45px;
+  word-wrap: break-word;
+}
