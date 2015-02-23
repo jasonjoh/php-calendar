@@ -1,3 +1,4 @@
+<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
 <?php
   // This file contains the EventList class, which generates a 
   // list of upcoming events to display on the website.
@@ -11,20 +12,27 @@
     private static $logoutUrl = '/common/oauth2/logout?post_logout_redirect_uri=%1$s';
     private static $outlookApiUrl = "https://outlook.office365.com/api/v1.0";
     
-    private static $enableFiddler = true;
+    // Set this to true to enable Fiddler capture.
+    // Note that if you have this set to true and you are not running Fiddler
+    // on the web server, requests will silently fail.
+    private static $enableFiddler = false;
     
+    // Builds a login URL based on the client ID and redirect URI
     public static function getLoginUrl($redirectUri) {
       $loginUrl = self::$authority.sprintf(self::$authorizeUrl, ClientReg::$clientId, urlencode($redirectUri));
       error_log("Generated login URL: ".$loginUrl);
       return $loginUrl;
     }
     
+    // Builds a logout URL based on the redirect URI.
     public static function getLogoutUrl($redirectUri) {
       $logoutUrl = self::$authority.sprintf(self::$logoutUrl, urlencode($redirectUri));
       error_log("Generated logout URL: ".$logoutUrl);
       return $logoutUrl;
     }
     
+    // Sends a request to the token endpoint to exchange an auth code
+    // for an access token.
     public static function getTokenFromAuthCode($authCode, $redirectUri) {
       // Build the form data to post to the OAuth2 token endpoint
       $token_request_data = array(
@@ -55,6 +63,8 @@
       error_log("curl_exec done.");
       curl_close($curl);
       
+      // The response is a JSON payload, so decode it into
+      // an array.
       $json_vals = json_decode($response, true);
       error_log("TOKEN RESPONSE:");
       foreach ($json_vals as $key=>$value) {
@@ -64,6 +74,8 @@
       return $json_vals;
     }
     
+    // Parses an ID token returned from Azure to get the user's
+    // display name.
     public static function getUserName($id_token) {
       $token_parts = explode(".", $id_token);
       
@@ -104,30 +116,39 @@
       return $jwt['name'];
     }
     
+    // Uses the Calendar API's CalendarView to get all events
+    // on a specific day. CalendarView handles expansion of recurring items.
     public static function getEventsForDate($access_token, $date) {
       error_log("getEventsForDate called:");
       error_log("  access token: ".$access_token);
       error_log("  date: ".date_format($date, "M j, Y g:i a (e)"));
       
+      // Set the start of our view window to midnight of the specified day.
       $windowStart = $date->setTime(0,0,0);
       $windowStartUrl = self::encodeDateTime($windowStart);
       error_log("  Window start (UTC): ".$windowStartUrl);
       
+      // Add one day to the window start time to get the window end.
       $windowEnd = $windowStart->add(new DateInterval("P1D"));
       $windowEndUrl = self::encodeDateTime($windowEnd);
       error_log("  Window end (UTC): ".$windowEndUrl);
       
+      // Build the API request URL
       $calendarViewUrl = self::$outlookApiUrl."/Me/CalendarView?"
                         ."startDateTime=".$windowStartUrl
                         ."&endDateTime=".$windowEndUrl
-                        ."&\$select=Subject,Start,End"
-                        ."&\$orderby=Start";
+                        ."&\$select=Subject,Start,End" // Use $select to limit the data returned
+                        ."&\$orderby=Start";           // Sort the results by the start time.
       
       return self::makeApiCall($access_token, "GET", $calendarViewUrl);
     }
     
+    // Use the Calendar API to add an event to the default calendar.
     public static function addEventToCalendar($access_token, $subject, $location, $startTime, $endTime) {
+      // Create a static body.
       $htmlBody = "<html><body>Added by php-calendar app.</body></html>";
+      
+      // Generate the JSON payload
       $event = array(
         "Subject" => $subject,
         "Location" => array("DisplayName" => $location),
@@ -143,8 +164,8 @@
       
       $response = self::makeApiCall($access_token, "POST", $createEventUrl, $eventPayload);
       
-      // NEED TO PARSE RESPONSE (if not error) and get the ID
-      // Then call addAttachmentToEvent to add the attachment.
+      // If the call succeeded, the response should be a JSON representation of the
+      // new event. Try getting the Id property and return it.
       if ($response['Id']) {
         return $response['Id'];
       }
@@ -155,7 +176,9 @@
       }
     }
     
+    // Use the Calendar API to add an attachment to an event.
     public static function addAttachmentToEvent($access_token, $eventId, $attachmentData) {
+      // Generate the JSON payload
       $attachment = array(
         "@odata.type" => "#Microsoft.OutlookServices.FileAttachment",
         "Name" => "voucher.txt",
@@ -170,13 +193,15 @@
       $response = self::makeApiCall($access_token, "POST", $createAttachmentUrl, $attachmentPayload);
     }
     
+    // Make an API call.
     public static function makeApiCall($access_token, $method, $url, $payload = NULL) {
+      // Generate the list of headers to always send.
       $headers = array(
-        "User-Agent: php-calendar/1.0",
-        "Authorization: Bearer ".$access_token,
-        "Accept: application/json",
-        "client-request-id: ".self::makeGuid(),
-        "return-client-request-id: true"
+        "User-Agent: php-calendar/1.0",         // Sending a User-Agent header is a best practice.
+        "Authorization: Bearer ".$access_token, // Always need our auth token!
+        "Accept: application/json",             // Always accept JSON response.
+        "client-request-id: ".self::makeGuid(), // Stamp each new request with a new GUID.
+        "return-client-request-id: true"        // Tell the server to include our request-id GUID in the response.
       );
       
       $curl = curl_init($url);
@@ -190,19 +215,27 @@
       
       switch(strtoupper($method)) {
         case "GET":
+          // Nothing to do, GET is the default and needs no
+          // extra headers.
           error_log("Doing GET");
           break;
         case "POST":
           error_log("Doing POST");
+          // Add a Content-Type header (IMPORTANT!)
           $headers[] = "Content-Type: application/json";
           curl_setopt($curl, CURLOPT_POST, true);
           curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
           break;
         case "PATCH":
           error_log("Doing PATCH");
+          // Add a Content-Type header (IMPORTANT!)
+          $headers[] = "Content-Type: application/json";
+          curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PATCH");
+          curl_setopt($curl, CURLOPT_POSTFIELDS, $payload);
           break;
         case "DELETE":
           error_log("Doing DELETE");
+          curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "DELETE");
           break;
         default:
           error_log("INVALID METHOD: ".$method);
@@ -226,6 +259,8 @@
       }
     }
     
+    // This function convert a dateTime from local TZ to UTC, then
+    // encodes it in the format expected by the Outlook APIs.
     public static function encodeDateTime($dateTime) {
       $utcDateTime = $dateTime->setTimeZone(new DateTimeZone("UTC"));
       
@@ -233,6 +268,7 @@
       return date_format($utcDateTime, $dateFormat);
     }
     
+    // This function generates a random GUID.
     public static function makeGuid(){
         if (function_exists('com_create_guid')) {
           error_log("Using 'com_create_guid'.");
@@ -254,3 +290,26 @@
   }
     
 ?>
+
+<!--
+ MIT License: 
+ 
+ Permission is hereby granted, free of charge, to any person obtaining 
+ a copy of this software and associated documentation files (the 
+ ""Software""), to deal in the Software without restriction, including 
+ without limitation the rights to use, copy, modify, merge, publish, 
+ distribute, sublicense, and/or sell copies of the Software, and to 
+ permit persons to whom the Software is furnished to do so, subject to 
+ the following conditions: 
+ 
+ The above copyright notice and this permission notice shall be 
+ included in all copies or substantial portions of the Software. 
+ 
+ THE SOFTWARE IS PROVIDED ""AS IS"", WITHOUT WARRANTY OF ANY KIND, 
+ EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+ MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE 
+ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
+ OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
+ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
