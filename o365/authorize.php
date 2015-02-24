@@ -1,18 +1,23 @@
-<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
-
-<!-- This file serves as the redirect target for the first part of the auth code grant flow.
-     The user is directed to the Azure login site, and once they login, they are redirected here. -->
 <?php
+// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
+
+// This file serves as the redirect target for the first part of the auth code grant flow.
+// The user is directed to the Azure login site, and once they login, they are redirected here.
 session_start(); 
-require('Office365Service.php');
+require_once('Office365Service.php');
 // Get the 'code' and 'session_state' parameters from
 // the GET request
 $code = $_GET['code'];
 $session_state = $_GET['session_state'];
 
+$errorPage = "http".(($_SERVER["HTTPS"] == "on") ? "s://" : "://").$_SERVER["HTTP_HOST"]."/php-calendar/error.php"; 
+
 if (is_null($code)) {
   // Display error 
-  echo "NO CODE!";
+  $msg = "There was no 'code' parameter in the query string.";
+  error_log($msg);
+  header("Location: ".$errorPage."?errorMsg=".urlencode($msg));
+  exit;
 }
 else {
   error_log("authorize.php called with code: ".$code);
@@ -21,24 +26,30 @@ else {
   error_log("Calling getTokenFromAuthCode");
   // Use the code supplied by Azure to request an access token.
   $tokens = Office365Service::getTokenFromAuthCode($code, $redirectUri);
-  error_log("getTokenFromAuthCode returned:");
-  error_log("  access_token: ".$tokens['access_token']);
-  error_log("  refresh_token: ".$tokens['refresh_token']);
-  
-  // Save the access token and refresh token to the session.
-  $_SESSION['accessToken'] = $tokens['access_token'];
-  $_SESSION['refreshToken'] = $tokens['refresh_token'];
-  // Parse the id token returned in the response to get the user name.
-  $_SESSION['userName'] = Office365Service::getUserName($tokens['id_token']);
+  if ($tokens['access_token']) {
+    error_log("getTokenFromAuthCode returned:");
+    error_log("  access_token: ".$tokens['access_token']);
+    error_log("  refresh_token: ".$tokens['refresh_token']);
+    
+    // Save the access token and refresh token to the session.
+    $_SESSION['accessToken'] = $tokens['access_token'];
+    $_SESSION['refreshToken'] = $tokens['refresh_token'];
+    // Parse the id token returned in the response to get the user name.
+    $_SESSION['userName'] = Office365Service::getUserName($tokens['id_token']);
 
-  // Redirect back to the homepage.
-  $homePage = "http".(($_SERVER["HTTPS"] == "on") ? "s://" : "://").$_SERVER["HTTP_HOST"]."/php-calendar/home.php"; 
-  header("Location: ".$homePage);
-  exit;
+    // Redirect back to the homepage.
+    $homePage = "http".(($_SERVER["HTTPS"] == "on") ? "s://" : "://").$_SERVER["HTTP_HOST"]."/php-calendar/home.php"; 
+    header("Location: ".$homePage);
+    exit;
+  }
+  else {
+    $msg = "Error retrieving access token: ".$tokens['error'];
+    error_log($msg);
+    header("Location: ".$errorPage."?errorMsg=".urlencode($msg));
+  }
 }
-?>
 
-<!--
+/*
  MIT License: 
  
  Permission is hereby granted, free of charge, to any person obtaining 
@@ -59,4 +70,5 @@ else {
  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+*/
+?>

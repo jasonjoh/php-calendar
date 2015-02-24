@@ -6,7 +6,8 @@ $page['title'] = 'Add to Calendar';
 
 // include the page header
 include('common/header.php');
-require('o365/Office365Service.php');
+require_once('o365/Office365Service.php');
+require_once('sessionManager.php');
 
 // Get the index of the show from the query parameters
 $showIndex = $_GET['showIndex'];
@@ -22,6 +23,13 @@ error_log("Retrieved event '".$event->title."' from session.");
 
 // Get all events on the user's O365 calendar for that day.
 $eventsOnThisDay = Office365Service::getEventsForDate($accessToken, $event->startTime);
+if (SessionManager::checkResponseAndRefreshToken($eventsOnThisDay)) {
+  // Pick up new access token
+  $accessToken = $_SESSION['accessToken'];
+  
+  error_log("Retrying get events request");
+  $eventsOnThisDay = Office365Service::getEventsForDate($accessToken, $event->startTime);
+}
 
 // Build a link URL to the doAdd.php file, which does the actual work to add
 // the event to the O365 calendar.
@@ -41,6 +49,11 @@ $altRow = false;
   </div>
   <div id="calendar-sidebar">
     <div id="cal-view-title">Your calendar for <?php echo date_format($event->startTime, "m/d/Y") ?></div>
+    <?php 
+      if ($eventsOnThisDay['error']) { 
+        echo "<div text-align=\"center\">ERROR: ".$eventsOnThisDay['error']."</div>";
+      }
+    ?>
     <table class="cal-view">
       <tr>
         <th>Event</th>
