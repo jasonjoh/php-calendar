@@ -137,7 +137,17 @@ a.action:link, a.action:visited {
   float: right;
 }
 
-a.add:link, a.add:visited {
+.add-event {
+  clear: both;
+  font-weight: bold;
+  padding-top: 40px;
+}
+
+input[type=text] {
+  width: 80%;
+}
+
+input[type=submit] {
   display: block;
   width: auto;
   font-size: .7em;
@@ -146,7 +156,7 @@ a.add:link, a.add:visited {
   background-color: #2E8B57;
   text-align: center;
   padding: 4px;
-  text-decoration: none;
+  margin-top: 5px;
   text-transform: uppercase;
   float: left;
 }
@@ -172,6 +182,7 @@ a.add:link, a.add:visited {
   margin-top: 20px;
   margin-right: 5px;
   padding-right: 10px;
+  clear: right;
 }
 
 .debug-dump {

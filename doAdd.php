@@ -5,12 +5,23 @@ require_once('o365/Office365Service.php');
 require_once('sessionManager.php');
 session_start(); 
 
-// Get the show index from the query parameters.
-$showIndex = $_GET['showIndex'];
-error_log("doAdd.php called.");
-error_log("showIndex parameter: ".$showIndex);
-
+$homePage = "http".(($_SERVER["HTTPS"] == "on") ? "s://" : "://").$_SERVER["HTTP_HOST"]."/php-calendar/home.php"; 
 $errorPage = "http".(($_SERVER["HTTPS"] == "on") ? "s://" : "://").$_SERVER["HTTP_HOST"]."/php-calendar/error.php"; 
+
+error_log("doAdd.php called.");
+
+// Get the show index from the query parameters.
+$showIndex = $_POST['showIndex'];
+if (is_null($showIndex)) {
+  error_log("No 'showIndex' in POST parameters.");
+  header("Location: ".$homePage);
+  exit;
+}
+
+$attendeeString = $_POST['attendees'];
+error_log("Value of attendees: ".$attendeeString);
+
+error_log("showIndex parameter: ".$showIndex);
 
 // Get the access token from the session.
 $accessToken = $_SESSION['accessToken'];
@@ -21,14 +32,14 @@ error_log("Retrieved event '".$event->title."' from session.");
 
 // Add the event to the Office 365 calendar.
 $eventId = Office365Service::addEventToCalendar($accessToken, $event->title, $event->location,
-  $event->startTime, $event->endTime);  
+  $event->startTime, $event->endTime, $attendeeString);  
 error_log("Create returned: ".$eventId);
 if (SessionManager::checkResponseAndRefreshToken($eventId)) {
   // Pick up new access token
   $accessToken = $_SESSION['accessToken'];
   // Retry request
   $eventId = Office365Service::addEventToCalendar($accessToken, $event->title, $event->location,
-    $event->startTime, $event->endTime);
+    $event->startTime, $event->endTime, $attendeeString);
 }
 
 if (is_array($eventId) && $eventId['error']) {
@@ -58,7 +69,6 @@ if ($event->voucherRequired) {
 }
 
 // Finally, redirect the user back to the home page.
-$homePage = "http".(($_SERVER["HTTPS"] == "on") ? "s://" : "://").$_SERVER["HTTP_HOST"]."/php-calendar/home.php";   
 header("Location: ".$homePage);
 
 /*

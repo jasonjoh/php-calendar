@@ -1,5 +1,5 @@
-<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
 <?php
+// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. 
 session_start(); 
 require('o365/Office365Service.php');
 // Clear user info from the session.
@@ -11,9 +11,8 @@ unset($_SESSION['refreshToken']);
 $redirectUri = "http".(($_SERVER["HTTPS"] == "on") ? "s://" : "://").$_SERVER["HTTP_HOST"]."/php-calendar/home.php";
 // Redirect the user to the Azure logout URL, which will then redirect back to the homepage.
 header("Location: ".Office365Service::getLogoutUrl($redirectUri));
-?>
 
-<!--
+/*
  MIT License: 
  
  Permission is hereby granted, free of charge, to any person obtaining 
@@ -34,4 +33,5 @@ header("Location: ".Office365Service::getLogoutUrl($redirectUri));
  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+*/
+?>

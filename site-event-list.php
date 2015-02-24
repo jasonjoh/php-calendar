@@ -1,5 +1,5 @@
-<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
 <?php
+// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
   // This file contains the EventList class, which generates a 
   // list of upcoming events to display on the website.
   
@@ -61,9 +61,8 @@
     public $startTime;
     public $endTime;
   }
-?>
-
-<!--
+  
+/*
  MIT License: 
  
  Permission is hereby granted, free of charge, to any person obtaining 
@@ -84,4 +83,5 @@
  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+*/
+?>

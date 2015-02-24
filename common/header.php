@@ -1,5 +1,5 @@
-<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
 <?php 
+// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
 require('site-event-list.php');
 session_start(); 
 ?>
@@ -25,7 +25,8 @@ session_start();
 
 <!-- header ends -->
 
-<!--
+<?php
+/*
  MIT License: 
  
  Permission is hereby granted, free of charge, to any person obtaining 
@@ -46,4 +47,5 @@ session_start();
  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+*/
+?>

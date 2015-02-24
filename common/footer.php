@@ -1,4 +1,6 @@
-<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
+<?php
+// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
+?>
 <!-- footer begins -->
 
 <pre class="debug-dump">
@@ -15,7 +17,8 @@ SESSION VARIABLES:
 </body>
 </html>
 
-<!--
+<?php
+/*
  MIT License: 
  
  Permission is hereby granted, free of charge, to any person obtaining 
@@ -36,4 +39,5 @@ SESSION VARIABLES:
  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+*/
+?>

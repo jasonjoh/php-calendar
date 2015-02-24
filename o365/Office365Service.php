@@ -15,7 +15,7 @@
     // Set this to true to enable Fiddler capture.
     // Note that if you have this set to true and you are not running Fiddler
     // on the web server, requests will silently fail.
-    private static $enableFiddler = true;
+    private static $enableFiddler = false;
     
     // Builds a login URL based on the client ID and redirect URI
     public static function getLoginUrl($redirectUri) {
@@ -222,7 +222,7 @@
     }
     
     // Use the Calendar API to add an event to the default calendar.
-    public static function addEventToCalendar($access_token, $subject, $location, $startTime, $endTime) {
+    public static function addEventToCalendar($access_token, $subject, $location, $startTime, $endTime, $attendeeString) {
       // Create a static body.
       $htmlBody = "<html><body>Added by php-calendar app.</body></html>";
       
@@ -234,6 +234,26 @@
         "End" => self::encodeDateTime($endTime),
         "Body" => array("ContentType" => "HTML", "Content" => $htmlBody)
       );
+      
+      if (!is_null($attendeeString) && strlen($attendeeString) > 0) {
+        error_log("Attendees included: ".$attendeeString);
+        
+        $attendeeAddresses = array_filter(explode(';', $attendeeString));
+        
+        $attendees = array();
+        foreach($attendeeAddresses as $address) {
+          error_log("Adding ".$address);
+          
+          $attendee = array(
+            "EmailAddress" => array ("Address" => $address),
+            "Type" => "Required"
+          );
+          
+          $attendees[] = $attendee;
+        }
+        
+        $event["Attendees"] = $attendees;
+      }
       
       $eventPayload = json_encode($event);
       error_log("EVENT PAYLOAD: ".$eventPayload);
@@ -330,7 +350,7 @@
       
       if (self::isFailure($httpCode)) {
         return array('errorNumber' => $httpCode,
-                     'error' => 'Token request returned HTTP error '.$httpCode);
+                     'error' => 'Request returned HTTP error '.$httpCode);
       }
       
       $curl_errno = curl_errno($curl);

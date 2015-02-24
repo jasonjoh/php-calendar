@@ -1,5 +1,5 @@
-<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
 <?php
+// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
 // create an array to set page-level variables
 $page = array();
 $page['title'] = 'Add to Calendar';
@@ -33,7 +33,7 @@ if (SessionManager::checkResponseAndRefreshToken($eventsOnThisDay)) {
 
 // Build a link URL to the doAdd.php file, which does the actual work to add
 // the event to the O365 calendar.
-$buttonUrl = "doAdd.php?showIndex=".$showIndex;
+$buttonUrl = "doAdd.php";
 
 $altRow = false;
 ?>
@@ -41,11 +41,28 @@ $altRow = false;
 <div id="content">
   <div id="event-details">
     <h1>Add Event To Calendar</h1>
-    <strong><?php echo $event->title ?></strong>
-    <p>Location: <?php echo $event->location ?></p>
-    <p>Date: <?php echo date_format($event->startTime, "M j, Y") ?></p>
-    <p>Time: <?php echo date_format($event->startTime, "g:i a")." - ".date_format($event->endTime, "g:i a") ?></p>
-    <a class="add" href="<?php echo $buttonUrl ?>">Add to my calendar</a>
+    <table>
+      <tr>
+        <td>Show</td>
+        <td><?php echo $event->title ?></td>
+      </tr>
+      <tr>
+        <td>Location</td>
+        <td><?php echo $event->location ?></td>
+      </tr>
+      <tr>
+        <td>Date</td>
+        <td><?php echo date_format($event->startTime, "M j, Y") ?></td>
+      </tr>
+      <tr>
+        <td>Time</td>
+        <td><?php echo date_format($event->startTime, "g:i a")." - ".date_format($event->endTime, "g:i a") ?></td>
+      </tr>
+      <tr>
+        <td>Voucher required?</td>
+        <td><?php echo $event->voucherRequired ? "Yes" : "No" ?></td>
+      </tr>
+    </table>
   </div>
   <div id="calendar-sidebar">
     <div id="cal-view-title">Your calendar for <?php echo date_format($event->startTime, "m/d/Y") ?></div>
@@ -97,11 +114,15 @@ $altRow = false;
   </div>
 </div>
 
+<form class="add-event" action="<?php echo $buttonUrl ?>" method="post">
+  <input type="hidden" name="showIndex" id="showIndex" value="<?php echo $showIndex ?>"/>
+  <label for="attendees">Enter email addresses (separated by ';') to invite friends!</label><br>
+  <input type="text" name="attendees" id="attendees"/><br>
+  <input type="submit" value="Add to my calendar"</input>
+</form>
 <?php
 include('common/footer.php');
-?>
-
-<!--
+/*
  MIT License: 
  
  Permission is hereby granted, free of charge, to any person obtaining 
@@ -122,4 +143,5 @@ include('common/footer.php');
  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+*/
+?>
