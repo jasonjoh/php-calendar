@@ -11,10 +11,10 @@ This sample shows how you can use the [Calendar API](https://msdn.microsoft.com/
 
 ## Required software ##
 
-- [PHP 5.6.0](https://www.python.org/downloads/)
+- [PHP 5.6](http://php.net/downloads.php)
 - A web server capable of serving PHP.
 
-In my testing I used IIS 8 installed on a Windows 8.1 laptop. I installed PHP 5.6.0 using the [Web Platform Installer](http://www.microsoft.com/web/downloads/platform.aspx).
+In my testing I used IIS 8 installed on a Windows 8.1 laptop. I installed PHP 5.6.0 using the [Web Platform Installer](http://www.microsoft.com/web/downloads/platform.aspx) (Windows/IIS only).
 
 ## Running the sample ##
 
