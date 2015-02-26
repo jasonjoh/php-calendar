@@ -43,7 +43,9 @@
         "client_id" => ClientReg::$clientId,
         "client_secret" => ClientReg::$clientSecret
       );
-        
+      
+      // Calling http_build_query is important to get the data
+      // formatted as Azure expects.
       $token_request_body = http_build_query($token_request_data);
       error_log("Request body: ".$token_request_body);
       

@@ -1,15 +1,13 @@
-<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
 <?php
-
+// Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file.
 class ClientReg {
   // App's client ID. Register the app in Azure AD to get this value.
   public static $clientId = "YOUR CLIENT ID HERE";
   // App's client secret. Register the app in Azure AD to get this value.
   public static $clientSecret = "YOUR CLIENT SECRET HERE";
 }
-?>
 
-<!--
+/*
  MIT License: 
  
  Permission is hereby granted, free of charge, to any person obtaining 
@@ -30,4 +28,5 @@ class ClientReg {
  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION 
  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION 
  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
--->
+*/
+?>
