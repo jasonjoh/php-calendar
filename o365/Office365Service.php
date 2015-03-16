@@ -6,7 +6,7 @@
   require_once("ClientReg.php");
   
   class Office365Service {
-    private static $authority = "https://login.windows.net";
+    private static $authority = "https://login.microsoftonline.com";
     private static $authorizeUrl = '/common/oauth2/authorize?client_id=%1$s&redirect_uri=%2$s&response_type=code';
     private static $tokenUrl = "/common/oauth2/token";
     private static $logoutUrl = '/common/oauth2/logout?post_logout_redirect_uri=%1$s';
