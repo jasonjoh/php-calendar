@@ -1,5 +1,7 @@
 # PHP Calendar API Sample #
 
+[日本 (日本語)](https://github.com/jasonjoh/php-calendar/blob/master/loc/readme-ja.md)
+
 This sample shows how you can use the [Calendar API](https://msdn.microsoft.com/office/office365/APi/calendar-rest-operations) from PHP. The sample app is an "upcoming shows" app for a fictional community theater's Shakespearean festival. Users can connect their Office 365 account and add events to their calendar for the show times they are attending. The user has the option of inviting friends, which will send a meeting request to each invited friend. 
 
 ## API features used ##
