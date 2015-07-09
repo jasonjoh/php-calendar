@@ -1,5 +1,7 @@
 # PHP 予定表 API のサンプル #
 
+[日本 (日本語)](https://github.com/jasonjoh/php-calendar/blob/master/loc/readme-ja.md) (日本語)
+
 このサンプルは、PHP の[予定表 API](https://msdn.microsoft.com/office/office365/APi/calendar-rest-operations) を使用する方法を示しています。サンプル アプリは、架空のコミュニティ劇場のシェークスピア祭の「今後の公演」アプリです。ユーザーは、Office 365 アカウントに接続し、参加する公演について予定表にイベントを追加することができます。ユーザーには、友人を招待して、招待した友人それぞれに会議出席依頼を送信するオプションがあります。 
 
 ## 使用する API の機能 ##
@@ -42,3 +44,4 @@ Copyright (c) Microsoft. All rights reserved.
 Twitter ([@JasonJohMSFT](https://twitter.com/JasonJohMSFT)) をぜひフォローしてください。
 
 [Exchange 開発ブログ](http://blogs.msdn.com/b/exchangedev/)をフォローする
+
