@@ -7,7 +7,7 @@ $page['title'] = 'Oops...';
 // include the page header
 include('common/header.php');
 
-$errorMessage = $_GET['errorMsg'];
+$errorMessage = strip_tags($_GET['errorMsg']);
 ?>
 
 <h1>Unfortunately, something didn't work right.</h1>
